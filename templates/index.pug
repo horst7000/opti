@@ -1,0 +1,69 @@
+html    
+  head
+    script(type='text/javascript' src= '/snap/snap.svg-min.js')
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
+    link(rel='stylesheet' href='/css/bootstrap.min.css')
+    link(rel='stylesheet' href='/css/my.css')
+
+
+  body
+    div.sidenav
+      .custom-control.custom-switch
+        input#customSwitch1.custom-control-input(type='checkbox' checked='')
+        label.custom-control-label(for='customSwitch1') Debug
+
+      h2 Graph properties
+      .btn-group.btn-group-toggle(data-toggle='buttons')
+        label.btn.btn-outline-primary
+          input(type='checkbox' autocomplete='off')
+          |  neg. Gew.
+      
+      .btn-group.btn-group-toggle(data-toggle='buttons')
+        label.btn.btn-outline-primary
+          input(type='checkbox' autocomplete='off')#directed
+          |  gerichtet
+        label.btn.btn-outline-primary
+          input(type='checkbox' autocomplete='off')#acyclic
+          |  azyklisch
+      br
+      br
+      br
+      h2 Algorithmns    
+
+      legend Bäume
+      
+      button.btn.btn-outline-primary(type='button') max. Wald (Greedy)
+      br
+      button.btn.btn-outline-primary(type='button')#kruskal min. spanning tree (Kruskal)
+      br
+      button.btn.btn-outline-primary(type='button')#prim min. spanning tree (Dÿkstra-Prim)
+
+      legend kuerzeste Wege
+    
+      button.btn.btn-outline-primary(type='button')#bellmann Bellmann (dir. acyc. graph)
+      br
+      button.btn.btn-outline-primary(type='button')#dijkstra Dijkstra
+
+      legend Knapsack
+      
+      button.btn.btn-outline-primary(type='button') bbb
+
+    div.main
+      svg(width=700, height=500)#svg
+
+      table.table.table-hover
+        thead
+          tr
+            th(scope='col') Set
+            th(scope='col') Nodes
+            th(scope='col') Edges
+        tbody#setTable
+
+
+    script(type='text/javascript' src= '/js/node.js')
+    script(type='text/javascript' src= '/js/edge.js')
+    script(type='text/javascript' src= '/js/graph.js')
+    script(type='text/javascript' src= '/js/graphset.js')
+    script(type='text/javascript' src= '/js/algos.js')

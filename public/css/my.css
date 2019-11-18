@@ -1,0 +1,30 @@
+.sidenav {
+    height: 100%;
+    width: 260px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    border: 1px;
+    border-color: #e5e5e5;
+    border-right-style: solid;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  
+  .main {
+    margin-left: 260px; /* Same as the width of the sidenav */
+    padding: 0px 10px;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: #a1c0f5;
+  }
+
+  .btn-outline-primary {
+    margin-bottom: 3px;
+  }
+
+  .btn-group {
+    margin-bottom: 3px;
+  }
