@@ -4,15 +4,19 @@ class Edge {
 		this.src = src;
         this.trg = trg;
         this.cost = Math.floor(src.dist(trg.x,trg.y)/10);
-        this.nodraw = nodraw;
+		this.nodraw = nodraw;
+		this.directed = directed;
 
-        if(!nodraw)
-		    this.draw(directed);
+		this.draw();
     }
     
     set color(col) { this.line.attr({stroke: col}) }
 
-	draw(directed) {
+	draw() {
+		if(this.nodraw)  return;
+		if(this.line) 	 this.line.remove();
+		if(this.costTxt) this.costTxt.remove();
+
 		let src 	= this.src;
 		let trg 	= this.trg;
 		let dist 	= src.dist(trg.x,trg.y);
@@ -23,10 +27,10 @@ class Edge {
 		let orth  = {
 			x: -normdy,
 			y: normdx
-		}
+		};
 		this.line = {};
 
-		if(directed)
+		if(this.directed)
 			this.line 	= s.path(
 				"M"+src.x+" "+src.y+
 				" Q"+(src.x+dx/2+orth.x*dist/3)+" "+(src.y+dy/2+orth.y*dist/3)+
@@ -48,7 +52,7 @@ class Edge {
 		// draw text / cost
 		this.costTxt = s.text(0,0,this.cost);
 		let fontSize = 1.1*this.r;		
-		if(directed)
+		if(this.directed)
 			this.costTxt.attr({
 				x: src.x + dx/2+orth.x*dist/4 - fontSize/2,
 				y: src.y + dy/2+orth.y*dist/4 + fontSize/2,

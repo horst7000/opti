@@ -10,9 +10,11 @@ html
 
   body
     div.sidenav
-      .custom-control.custom-switch
-        input#customSwitch1.custom-control-input(type='checkbox' checked='')
-        label.custom-control-label(for='customSwitch1') Debug
+      div.input-group
+        span.input-group-btn
+          button.btn.btn-success.btn-sm(type='button')#redraw redraw
+        input.form-control.form-control-sm(type='number' value='8' width='4')#count
+
 
       h2 Graph properties
       .btn-group.btn-group-toggle(data-toggle='buttons')
@@ -27,6 +29,11 @@ html
         label.btn.btn-outline-primary
           input(type='checkbox' autocomplete='off')#acyclic
           |  azyklisch
+      
+      
+      button.btn.btn-outline-primary(type='button')#repulsive repulsive force 
+      button.btn.btn-outline-primary(type='button')#spring spring force 
+
       br
       br
       br
@@ -34,15 +41,15 @@ html
 
       legend Bäume
       
-      button.btn.btn-outline-primary(type='button') max. Wald (Greedy)
+      button.btn.btn-outline-primary(type='button' disabled) max. Wald (Greedy)
       br
-      button.btn.btn-outline-primary(type='button')#kruskal min. spanning tree (Kruskal)
+      button.btn.btn-outline-primary(type='button' disabled)#kruskal min. spanning tree (Kruskal)
       br
       button.btn.btn-outline-primary(type='button')#prim min. spanning tree (Dÿkstra-Prim)
 
       legend kuerzeste Wege
     
-      button.btn.btn-outline-primary(type='button')#bellmann Bellmann (dir. acyc. graph)
+      button.btn.btn-outline-primary(type='button' disabled)#bellmann Bellmann (dir. acyc. graph)
       br
       button.btn.btn-outline-primary(type='button')#dijkstra Dijkstra
 

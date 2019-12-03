@@ -23,13 +23,14 @@ class RandomGraph {
 
 	createNodes() {
 		for (let i = 1; i <= this.nodeCount; i++) {
-			let randomX = 2*this.r+Math.random()*svgWidth;
-			let randomY = 2*this.r+Math.random()*svgHeight;
+			let margin  = 2*this.r;
+			let randomX = margin+Math.random()*(svgWidth-2*margin);
+			let randomY = margin+Math.random()*(svgHeight-2*margin);
 			
 			let errorCnt = 0;
 			while(this.closestNode(randomX,randomY).dist(randomX,randomY) < 3*this.r && errorCnt < 100) {
-				randomX = 2*this.r+Math.random()*400;
-				randomY = 2*this.r+Math.random()*200;
+				randomX = margin+Math.random()*(svgWidth-2*margin);
+				randomY = margin+Math.random()*(svgHeight-2*margin);
 				errorCnt++;
 			}
 			this.nodes.push(new Node(randomX,randomY,this.r,i));
@@ -51,6 +52,7 @@ class RandomGraph {
             )
 				clNode = el;
 		});
+		
 		return clNode;
     }
     
@@ -63,14 +65,16 @@ class RandomGraph {
         return hasEd;
     }
 
-	connectClosestNodes(amount = 1, p = 1) { // p propability
+	connectClosestNodes(maxDegree, p = 1) { // p propability
 		this.nodes.forEach(el => {
-			let clNode;
+			let clNode = {};
 			let dist = 0;
-			for (let i = 0; i < amount; i++) {
+			for (let i = 0; i < maxDegree; i++) {
 				if(Math.random() < p || i==0) { // connect at least 1 (i==0)
 					clNode = this.closestNode(el.x,el.y,dist);
-                    dist = clNode.dist(el.x,el.y);
+					if(!clNode.nr) continue;
+
+					dist = clNode.dist(el.x,el.y);
                     if(!(this.directed && this.acyclic) || !this.hasEdge(clNode,el))   // acyclic => not connected
 					    this.connect(el, clNode);
 				}
@@ -79,23 +83,22 @@ class RandomGraph {
 	}
 
 	connect(src, trg) {
-        let edge = {};
-        
-        if(this.isDirected())
-            edge = new Edge(src,trg,this.directed,this.r);
-        else if(!this.hasEdge(src,trg)) {
-            edge = new Edge(src,trg,this.directed,this.r);
+		if(this.hasEdge(src,trg))
+			return;
 
-            let edgeRet = new Edge(trg,src,this.directed,this.r,true);
-            trg.addOut(edgeRet);
-            src.addIn(edgeRet);
-            this.edges.push(edgeRet);
-        } else
-            return;
-        
+		let edge = {};
+		
+		edge = new Edge(src,trg,this.directed,this.r);
 		src.addOut(edge);
         trg.addIn(edge);
         this.edges.push(edge);
+
+        if(!this.isDirected()) {
+            let edgeRet = new Edge(trg,src,this.directed,this.r,true); // nodraw=true
+            trg.addOut(edgeRet);
+            src.addIn(edgeRet);
+            this.edges.push(edgeRet);
+		}
 	}
 
 	resetSvgAndTable() {

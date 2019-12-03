@@ -9,8 +9,8 @@ class Node {
 		this._in = []; // incoming edges
 		this._out = []; // outgoing edges
 	}
-	get x() { return this.circle ? this.circle.attr("cx") : this._x }
-	get y() { return this.circle ? this.circle.attr("cy") : this._y }
+	get x() { return this._x }
+	get y() { return this._y }
 	get nr() { return this._nr }
     get out() { return this._out }
     get in() { return this._in }
@@ -24,8 +24,8 @@ class Node {
         else
             this._cost.attr({text: c});
 
-    }
-    
+	}
+		
 	addIn(edge) {
 		this._in.push(edge);
 	}
@@ -34,11 +34,23 @@ class Node {
 		this._out.push(edge);
 	}
 
+	animate(dx, dy, duration, easing, callback) {
+		dx = Math.floor(dx);
+		dy = Math.floor(dy);
+		this.circle.animate({cx:"+="+dx, cy:"+="+dy}, duration, easing, callback);
+		this.text.animate({x:"+="+dx, y:"+="+dy}, duration, easing, callback);
+		this._x += dx;
+		this._y += dy;
+	}
+
 	dist(x,y) {
 		return Math.sqrt(Math.pow(this.x-x,2) + Math.pow(this.y-y,2));
 	}
 
 	draw() {
+		if(this.circle) this.circle.remove();
+		if(this.text)  	this.text.remove();
+
 		let x = this._x;
 		let y = this._y;
 		let r = this._r;

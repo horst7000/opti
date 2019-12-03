@@ -1,6 +1,71 @@
 let graph = {};
 let g = {};
 
+function repulsiveForce() {
+	const c0 = 2*1E4;
+	
+	let forceX = 0;
+	let forceY = 0;
+	let dist   = 0;
+
+	g.nodes.forEach(nodeA => {
+		forceX = 0;
+		forceY = 0;
+
+		// calc forces
+		g.nodes.forEach(nodeB => {
+			if(nodeA.nr == nodeB.nr) return;
+
+			dist = nodeA.dist(nodeB.x,nodeB.y);
+			forceX += c0/Math.pow(dist,3) * (nodeA.x-nodeB.x);
+			forceY += c0/Math.pow(dist,3) * (nodeA.y-nodeB.y);			
+		});
+
+		// force from edge
+		forceX += c0/(2*Math.pow(nodeA.x,2));
+		forceY += c0/(2*Math.pow(nodeA.y,2));	
+
+		// duration in ms
+		nodeA.animate(forceX, forceY, 120, null, () => {
+			nodeA.out.forEach(edge => {
+				edge.draw();
+			});
+		});
+	});
+}
+
+function springForce() {
+	const c1 = 2*1E-5;
+	const defaultDist = 60; // < dependend on edge cost
+	
+	let forceX = 0;
+	let forceY = 0;
+	let dist   = 0;
+
+	g.nodes.forEach(nodeA => {
+		forceX = 0;
+		forceY = 0;
+
+		// calc forces
+		g.nodes.forEach(nodeB => {
+			if(nodeA.nr == nodeB.nr) return;
+
+			dist = Math.abs(nodeA.dist(nodeB.x,nodeB.y));
+			forceX += -c1*(dist-defaultDist) * (nodeA.x-nodeB.x);
+			forceY += -c1*(dist-defaultDist) * (nodeA.y-nodeB.y);
+		});
+
+		console.log("f "+forceX+" "+forceY);
+
+		// duration in ms
+		nodeA.animate(forceX, forceY, 120, null, () => {
+			nodeA.out.forEach(edge => {
+				edge.draw();
+			});
+		});
+	});
+}
+
 async function kruskal() {
 	let f = new GraphSet("F","orange");
 	let gminusf = new GraphSet("G\\F","grey",g.nodes, g.edges);
@@ -128,14 +193,23 @@ function time(ms) {
 }
 
 function newGraph() {
-	graph = new RandomGraph(8, 11, 3, 0.5);
+	let nodecount = document.getElementById("count").value;
+	graph = new RandomGraph(nodecount, 11, 3, 0.5);
 	g = new GraphSet("G","blue",graph.nodes,graph.edges);
 }
 
-document.getElementById("directed").onchange = newGraph;
 
+document.getElementById("redraw").onclick = newGraph;
+// Graph properties
+document.getElementById("directed").onchange = newGraph;
+document.getElementById("repulsive").onclick = repulsiveForce;
+document.getElementById("spring").onclick = springForce;
+
+// Algorithmns
+// Baeume
 document.getElementById("kruskal").onclick 	= kruskal;
 document.getElementById("prim").onclick 	= prim;
+// kuerzeste Wege
 document.getElementById("bellmann").onclick = bellmann;
 document.getElementById("dijkstra").onclick = dijkstra;
 
