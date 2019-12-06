@@ -1,16 +1,34 @@
 class Edge {
-	constructor(src,trg,directed,nodeRadius,nodraw) {
+	constructor(src,trg,directed,nodeRadius,nodraw=false) {
 		this.r = nodeRadius;
 		this.src = src;
         this.trg = trg;
-        this.cost = Math.floor(src.dist(trg.x,trg.y)/10);
-		this.nodraw = nodraw;
+        this._cost = Math.floor(src.dist(trg.x,trg.y)/10);
 		this.directed = directed;
+		this.nodraw = nodraw;
+
+		if(!directed && !nodraw) {
+			this.backEdge = new Edge(trg, src, directed, nodeRadius, true);
+		}
+		
+		src.addOut(this);
+		trg.addIn(this);
 
 		this.draw();
     }
     
     set color(col) { this.line.attr({stroke: col}) }
+	set cost(cost) {
+		this._cost = cost;
+		if(!this.nodraw)
+			this.costTxt.attr({text: cost});
+
+		if(this.backEdge)
+			this.backEdge.cost = cost;
+	}
+	get cost() { return this._cost }
+	get txtX() { return this.nodraw ? 0 : this.costTxt.attr('x')}
+	get txtY() { return this.nodraw ? 0 : this.costTxt.attr('y')}
 
 	draw() {
 		if(this.nodraw)  return;

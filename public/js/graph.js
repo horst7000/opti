@@ -1,5 +1,5 @@
-const svgWidth 	= 600;
-const svgHeight = 400;
+const svgWidth 	= 700;
+const svgHeight = 500;
 
 
 class RandomGraph {
@@ -13,8 +13,10 @@ class RandomGraph {
 		this.acyclic 	= document.getElementById("acyclic").checked;
 
 		this.createNodes();
-		this.connectClosestNodes(maxDegree, prop);
-        this.drawNodes(); // draw nodes at end so they are drawn on top
+		// this.connectClosestNodes(maxDegree, prop);
+		this.connectRandomNodes(maxDegree, prop);
+		this.distributeRandomCosts();
+		this.drawNodes(); // draw nodes at end so they are drawn on top
     }
 
     isDirected() { return document.getElementById("directed").checked; }
@@ -55,15 +57,22 @@ class RandomGraph {
 		
 		return clNode;
     }
-    
-    hasEdge(src,trg) { // only for directed
-        let hasEd = false;
-        src.out.forEach(outedge => {
-            if(outedge.trg === trg)
-                hasEd = true;
-        });
-        return hasEd;
-    }
+	
+	connectRandomNodes(maxDegree, p = 1) {
+		this.nodes.forEach(el => {
+			let k = el.nr-1; // index in this.nodes[]
+			let dist = 0;
+			for (let i = 0; i < maxDegree; i++) {
+				k = (k+1) % this.nodeCount;
+				
+				if(Math.random() < p || el.out.length == 0) { // connect at least 1 (i==0)
+					dist = this.nodes[k].dist(el.x,el.y);
+                    if(!(this.directed && this.acyclic) || !this.hasEdge(this.nodes[k],el))   // acyclic => not connected
+					    this.connect(el, this.nodes[k]);
+				}
+			}
+		});
+	}
 
 	connectClosestNodes(maxDegree, p = 1) { // p propability
 		this.nodes.forEach(el => {
@@ -89,16 +98,24 @@ class RandomGraph {
 		let edge = {};
 		
 		edge = new Edge(src,trg,this.directed,this.r);
-		src.addOut(edge);
-        trg.addIn(edge);
         this.edges.push(edge);
+	}
 
-        if(!this.isDirected()) {
-            let edgeRet = new Edge(trg,src,this.directed,this.r,true); // nodraw=true
-            trg.addOut(edgeRet);
-            src.addIn(edgeRet);
-            this.edges.push(edgeRet);
-		}
+	distributeRandomCosts() {
+		this.edges.forEach(edge => {
+			edge.cost = Math.floor(3+Math.random()*20);
+		});
+	}
+    
+    hasEdge(src,trg) {
+        let hasEd = false;
+        src.out.forEach(outedge => {
+            if(outedge.trg === trg)
+				hasEd = true;
+			if(!this.directed && outedge.src === trg)
+				hasEd = true;
+		});
+        return hasEd;
 	}
 
 	resetSvgAndTable() {
