@@ -50,7 +50,6 @@ function repulsiveForce() {
 
 function springForce() {
 	const c1 = 2*1E-4;
-	// const defaultDist = 100; // < dependend on edge cost
 	
 	let forceX = [];
 	let forceY = [];

@@ -65,7 +65,7 @@ class RandomGraph {
 			for (let i = 0; i < maxDegree; i++) {
 				k = (k+1) % this.nodeCount;
 				
-				if(Math.random() < p || el.out.length == 0) { // connect at least 1 (i==0)
+				if(Math.random() < p || (el.out.length + el.in.length == 0)) { // connect at least 1 (i==0)
 					dist = this.nodes[k].dist(el.x,el.y);
                     if(!(this.directed && this.acyclic) || !this.hasEdge(this.nodes[k],el))   // acyclic => not connected
 					    this.connect(el, this.nodes[k]);
