@@ -9,7 +9,7 @@
   "author": "Gamer M",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "pug-cli": "^1.0.0-alpha6",
     "snapsvg": "^0.5.1"
   }
